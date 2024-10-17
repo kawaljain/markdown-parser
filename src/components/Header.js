@@ -1,6 +1,7 @@
 import { BsEyeFill } from "react-icons/bs";
 import { CgWebsite } from "react-icons/cg";
 import { DiGithubAlt } from "react-icons/di";
+import { MyDetails } from "../data/constant";
 
 function Header() {
   return (
@@ -15,7 +16,7 @@ function Header() {
 
         <a
           className="navbar-toggler"
-          href="https://github.com/kawaljain"
+          href={MyDetails.githubRepo}
           target="_blank"
           rel="noreferrer"
         >
@@ -23,7 +24,7 @@ function Header() {
         </a>
         <a
           className="navbar-toggler"
-          href="https://kawaljain.com/"
+          href={MyDetails.portfolioWebsite}
           target="_blank"
           rel="noreferrer"
         >
@@ -43,7 +44,7 @@ function Header() {
             <li className="nav-item">
               <a
                 className="nav-link "
-                href="https://github.com/kawaljain"
+                href={MyDetails.githubRepo}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -53,7 +54,7 @@ function Header() {
             <li className="nav-item">
               <a
                 className="nav-link"
-                href="https://kawaljain.com/"
+                href={MyDetails.portfolioWebsite}
                 target="_blank"
                 rel="noreferrer"
               >
