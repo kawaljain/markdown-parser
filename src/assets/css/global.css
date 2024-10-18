@@ -4,7 +4,6 @@
   --background-color-dark: #090917;
   --border-color: #e8e8e8;
 }
-
 .main-container {
   width: 100%;
 }
@@ -12,7 +11,9 @@
 body {
   padding-bottom: 20px;
 }
-
+.pd {
+  padding: 0;
+}
 .cursor-pointer {
   cursor: pointer;
 }
@@ -144,11 +145,21 @@ body {
 
 /* Edit Header end */
 
+.editor-container {
+  position: relative;
+  overflow: auto;
+}
+
 /* preview section start */
 .preview-container {
-  border: 1px solid var(--border-color);
-  height: 500px;
   padding-left: 10px;
+  height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .preview-main-container {
+    display: none;
+  }
 }
 /* preview section end */
 
