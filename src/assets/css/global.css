@@ -89,6 +89,13 @@ body {
   }
 }
 
+.black-quote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 10px;
+  padding: 10px;
+  font-size: 12px;
+}
 .nav-container a {
   text-decoration: none;
   color: var(--text-color-light);
