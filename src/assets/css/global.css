@@ -1,9 +1,19 @@
+:root {
+  --text-color-light: #f2f3f4;
+  --background-dark-color: #e8e8e8;
+}
+body {
+  padding-bottom: 20px;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
-
-body {
-  padding-bottom: 20px;
+.text-color-light {
+  color: var(--text-color-light);
+}
+.background-color-dark {
+  background-color: var(--background-dark-color);
 }
 
 .navbar {
@@ -32,4 +42,11 @@ body {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   font-size: 0.875rem;
+}
+
+/* Footer */
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }

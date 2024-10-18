@@ -6,7 +6,6 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-xcode";
 
-import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 function Markdown() {
@@ -105,7 +104,7 @@ function Markdown() {
             // dangerouslySetInnerHTML={{ __html: htmlPreview }}
           >
             <h1 className="code-line" data-line-start="0" data-line-end="1">
-              Kawal{" "}
+              Kawal
             </h1>
             <h2 className="code-line" data-line-start="1" data-line-end="2">
               Jain
