@@ -1,19 +1,18 @@
 import { useState } from "react";
 import AceEditor from "react-ace";
-
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
+
+import EditorHeader from "../components/EditorHeader";
+
+import { SVG_ICON_SIZE } from "../data/constant";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-xcode";
-
 import "ace-builds/src-noconflict/ext-language_tools";
 
 function Markdown() {
   const [htmlPreview, setPreview] = useState(null);
   const [fullScreen, setFullScreen] = useState(true);
-
-  const backgroundColor = "#e8e8e8";
-
   const onChange = (value) => {
     setPreview(value);
   };
@@ -22,42 +21,20 @@ function Markdown() {
     <div className="container-fluid">
       <div className="row mb-2">
         <div className="col-md-6">
-          <div
-            className="nav-scroller "
-            style={{
-              borderBottom: "1px solid #e5e5e5",
-              borderTop: "1px solid #e5e5e5",
-              border: "1px solid #e5e5e5",
-            }}
-          >
-            <nav
-              className=" justify-content-between align-items-center"
-              style={{
-                display: "flex",
-                height: "100%",
+          <EditorHeader title={"Markdown"}>
+            <div
+              className=" link-secondary cursor-pointer"
+              onClick={() => {
+                setFullScreen(!fullScreen);
               }}
             >
-              <div
-                className="link-secondary cursor-pointer"
-                style={{ paddingLeft: ".5rem" }}
-              >
-                {"Markdown"}
-              </div>
-              <div
-                className=" link-secondary cursor-pointer"
-                onClick={() => {
-                  setFullScreen(!fullScreen);
-                }}
-                style={{ paddingRight: ".5rem" }}
-              >
-                {fullScreen ? (
-                  <AiOutlineFullscreen size={25} />
-                ) : (
-                  <AiOutlineFullscreenExit size={25} />
-                )}
-              </div>
-            </nav>
-          </div>
+              {fullScreen ? (
+                <AiOutlineFullscreen size={SVG_ICON_SIZE} />
+              ) : (
+                <AiOutlineFullscreenExit size={SVG_ICON_SIZE} />
+              )}
+            </div>
+          </EditorHeader>
 
           <AceEditor
             mode="java"
@@ -72,35 +49,16 @@ function Markdown() {
             lineHeight={24}
             debounce={150}
             height="500px"
-            style={{ border: `1px solid ${backgroundColor}` }}
+            className="border-1 "
           />
         </div>
         <div className="col-md-6">
-          <div
-            className="nav-scroller py-1 "
-            style={{
-              borderBottom: "1px solid #e5e5e5",
-              borderTop: "1px solid #e5e5e5",
-              border: "1px solid #e5e5e5",
-            }}
-          >
-            <nav className="nav d-flex justify-content-between">
-              <div className="p-2 link-secondary cursor-pointer">
-                {"Preview"}
-              </div>
-              <div className="p-2 link-secondary cursor-pointer">{"</>"}</div>
-            </nav>
-          </div>
-
+          <EditorHeader title={"Preview"}>
+            <div className="p-2 link-secondary cursor-pointer">{"</>"}</div>
+          </EditorHeader>
           <div
             id="preview"
-            className="preview-html"
-            preview=""
-            style={{
-              border: `1px solid ${backgroundColor}`,
-              paddingLeft: "20px",
-              height: "500px",
-            }}
+            className=" preview-container preview-html"
             // dangerouslySetInnerHTML={{ __html: htmlPreview }}
           >
             <h1 className="code-line" data-line-start="0" data-line-end="1">
