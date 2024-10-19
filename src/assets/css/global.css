@@ -194,3 +194,13 @@ body {
   font-weight: 500;
   color: var(--text-color-primary);
 }
+
+@media screen and (max-width: 768px) {
+  .footer-sub-container {
+    display: block;
+    text-align: center;
+  }
+  .footer-container a {
+    font-size: 18px;
+  }
+}
