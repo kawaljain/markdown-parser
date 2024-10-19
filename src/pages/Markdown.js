@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import AceEditor from "react-ace";
-import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
+import {
+  AiOutlineFileMarkdown,
+  AiOutlineFullscreen,
+  AiOutlineFullscreenExit,
+} from "react-icons/ai";
+import { BsFiletypeHtml } from "react-icons/bs";
 
 import EditorHeader from "../components/EditorHeader";
 
@@ -16,10 +21,12 @@ import "ace-builds/src-noconflict/ext-language_tools";
 function Markdown() {
   const [htmlPreview, setHtmlPreview] = useState(null);
   const [editorheight, setEditorheight] = useState(0);
-  const [showFullScreen, setShowFullScreen] = useState(true);
+  const [showFullScreen, setShowFullScreen] = useState(false);
 
   const [showPreview, setShowPreview] = useState(false);
   const [isMobileSize, setIsMobileSize] = useState(false);
+
+  const [showMarkdownContent, setShowMarkdownContent] = useState(true);
 
   const [converted, setConverted] = useState(null);
 
@@ -58,39 +65,41 @@ function Markdown() {
             display: isMobileSize ? (!showPreview ? "block" : "none") : "block",
           }}
         >
-          <EditorHeader title={"Markdown"}>
+          <div className={`${showFullScreen ? " fullScreen " : "  "}`}>
+            <EditorHeader title={"Markdown"}>
+              <div
+                className=" link-secondary cursor-pointer"
+                onClick={() => {
+                  setShowFullScreen(!showFullScreen);
+                }}
+              >
+                {!showFullScreen ? (
+                  <AiOutlineFullscreen size={SVG_ICON_SIZE} />
+                ) : (
+                  <AiOutlineFullscreenExit size={SVG_ICON_SIZE} />
+                )}
+              </div>
+            </EditorHeader>
             <div
-              className=" link-secondary cursor-pointer"
-              onClick={() => {
-                setShowFullScreen(!showFullScreen);
-              }}
+              className="editor-container"
+              style={{ height: `${editorheight}px` }}
             >
-              {showFullScreen ? (
-                <AiOutlineFullscreen size={SVG_ICON_SIZE} />
-              ) : (
-                <AiOutlineFullscreenExit size={SVG_ICON_SIZE} />
-              )}
+              <AceEditor
+                mode="markdown"
+                theme="xcode"
+                onChange={onChangeEditor}
+                name="editor"
+                showPrintMargin={false}
+                editorProps={{ $blockScrolling: true }}
+                value={htmlPreview}
+                width="100%"
+                fontSize={16}
+                lineHeight={24}
+                debounce={150}
+                height="1200px"
+                className="border-1 "
+              />
             </div>
-          </EditorHeader>
-          <div
-            className="editor-container"
-            style={{ height: `${editorheight}px` }}
-          >
-            <AceEditor
-              mode="markdown"
-              theme="xcode"
-              onChange={onChangeEditor}
-              name="editor"
-              showPrintMargin={false}
-              editorProps={{ $blockScrolling: true }}
-              value={htmlPreview}
-              width="100%"
-              fontSize={16}
-              lineHeight={24}
-              debounce={150}
-              height="1200px"
-              className="border-1 "
-            />
           </div>
         </div>
         <div
@@ -100,17 +109,44 @@ function Markdown() {
           }}
         >
           <EditorHeader title={"Preview"}>
-            <div className="p-2 link-secondary cursor-pointer">{"</>"}</div>
+            <div
+              className="p-2 link-secondary cursor-pointer"
+              onClick={() => {
+                setShowMarkdownContent(!showMarkdownContent);
+              }}
+            >
+              {showMarkdownContent ? (
+                <BsFiletypeHtml
+                  size={SVG_ICON_SIZE}
+                  style={{
+                    fontWeight: 900,
+                  }}
+                />
+              ) : (
+                <AiOutlineFileMarkdown
+                  size={SVG_ICON_SIZE}
+                  style={{
+                    fontWeight: 900,
+                  }}
+                />
+              )}
+            </div>
           </EditorHeader>
           <div
             className="editor-container border-1"
             style={{ height: `${editorheight}px` }}
           >
-            <div
-              id="preview"
-              className="preview-container"
-              dangerouslySetInnerHTML={{ __html: converted }}
-            ></div>
+            {showMarkdownContent ? (
+              <div
+                id="preview"
+                className="preview-container"
+                dangerouslySetInnerHTML={{ __html: converted }}
+              ></div>
+            ) : (
+              <div id="preview" className="preview-container">
+                {converted}
+              </div>
+            )}
           </div>
         </div>
       </div>
