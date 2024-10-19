@@ -7,11 +7,11 @@ import EditorHeader from "../components/EditorHeader";
 import { SVG_ICON_SIZE } from "../data/constant";
 
 import useWindowResize from "../hooks/useWindowDimensions";
+import { getConvertedString } from "../utils/Converter";
 
-import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/ext-language_tools";
-import { getConvertedString } from "../utils/Converter";
 
 function Markdown() {
   const [htmlPreview, setHtmlPreview] = useState(null);
@@ -77,7 +77,7 @@ function Markdown() {
             style={{ height: `${editorheight}px` }}
           >
             <AceEditor
-              mode="java"
+              mode="markdown"
               theme="xcode"
               onChange={onChangeEditor}
               name="editor"

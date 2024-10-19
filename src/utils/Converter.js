@@ -44,7 +44,6 @@ const getFistCharacter = (line = "") => {
 };
 
 const addClosingTag = (currentFirstChar, lastFirstChar) => {
-  console.log((currentFirstChar, lastFirstChar));
   if (lastFirstChar === "-" && currentFirstChar !== "-") return "</ul>";
   return "";
 };
@@ -69,6 +68,7 @@ const convertForMultipleWord = (
 
     default:
       console.log("need to verify", firstLetter);
+      return `${html}<p>${words[1]}</p>`;
   }
   return html;
 };
@@ -79,7 +79,6 @@ export const getConvertedString = (line = "", prevLine = "") => {
   const previousListFirsChar = getFistCharacter(prevLine);
   let currentFirstChar = wordsInArray[0][0];
   let html = addClosingTag(currentFirstChar, previousListFirsChar);
-
   if (wordsInArray.length < 2) {
     return convertForSingleWord(
       html,
