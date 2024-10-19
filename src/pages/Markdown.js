@@ -52,6 +52,8 @@ function Markdown({ handleEditorViewMobile }) {
         html = `${html}${getConvertedString(line, prev)}`;
         setConverted(html);
       });
+    } else {
+      setConverted(null);
     }
   };
 

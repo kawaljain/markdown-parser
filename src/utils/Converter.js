@@ -1,5 +1,20 @@
 const startingHorizontalBreak = ["*", "-", "_"];
+const regexRules = [
+  //bold, italics and paragragh rules
+  [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
+  [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
+  [/__([^_]+)__/g, "<b>$1</b>"],
+  [/_([^_`]+)_/g, "<i>$1</i>"],
+  //links
+  [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>'],
 
+  //highlights
+  [/(`)(\s?[^\n,]+\s?)(`)/g, "<code >$2</code>"],
+];
+
+const isLetter = (str) => {
+  return /[a-zA-Z]/i.test(str);
+};
 const convertForSingleWord = (
   html,
   currentFirstChar,
@@ -35,7 +50,7 @@ const getHtmlForUnOrderList = (str, listOnly = false) => {
   if (listOnly) {
     return `<li > ${str}</li>`;
   }
-  return `<ul><li > ${str}</li>`;
+  return `<ul><li> ${str}</li>`;
 };
 
 const getFistCharacter = (line = "") => {
@@ -45,6 +60,7 @@ const getFistCharacter = (line = "") => {
 
 const addClosingTag = (currentFirstChar, lastFirstChar) => {
   if (lastFirstChar === "-" && currentFirstChar !== "-") return "</ul>";
+  else if (lastFirstChar === "`") return "</code>";
   return "";
 };
 
@@ -55,6 +71,9 @@ const convertForMultipleWord = (
   words = [],
   prevLine
 ) => {
+  if (!words[1]) {
+    return `${html}<p>${words.join(" ")}</p>`;
+  }
   switch (firstLetter) {
     case "#":
       html += getHtmlForHeading(words[0].length, words[1]);
@@ -67,33 +86,42 @@ const convertForMultipleWord = (
       break;
 
     default:
-      console.log("need to verify", firstLetter);
       return `${html}<p>${words[1]}</p>`;
   }
   return html;
 };
 
 export const getConvertedString = (line = "", prevLine = "") => {
-  const wordsInArray = line.split(" ");
-
   const previousListFirsChar = getFistCharacter(prevLine);
-  let currentFirstChar = wordsInArray[0][0];
+  let currentFirstChar = getFistCharacter(line);
   let html = addClosingTag(currentFirstChar, previousListFirsChar);
-  if (wordsInArray.length < 2) {
-    return convertForSingleWord(
-      html,
-      currentFirstChar,
-      previousListFirsChar,
-      wordsInArray[0],
-      prevLine
-    );
+
+  if (isLetter(currentFirstChar)) {
+    html = `${html}<p>${line}</p>`;
   } else {
-    return convertForMultipleWord(
-      html,
-      currentFirstChar,
-      previousListFirsChar,
-      wordsInArray,
-      prevLine
-    );
+    const wordsInArray = line.split(" ");
+
+    if (wordsInArray.length < 2) {
+      html = convertForSingleWord(
+        html,
+        currentFirstChar,
+        previousListFirsChar,
+        wordsInArray[0],
+        prevLine
+      );
+    } else {
+      html = convertForMultipleWord(
+        html,
+        currentFirstChar,
+        previousListFirsChar,
+        wordsInArray,
+        prevLine
+      );
+    }
   }
+
+  regexRules.forEach(([rule, template]) => {
+    html = html.replace(rule, template);
+  });
+  return html;
 };
