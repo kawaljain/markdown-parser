@@ -6,39 +6,24 @@ import EditorHeader from "../components/EditorHeader";
 
 import { SVG_ICON_SIZE } from "../data/constant";
 
+import useWindowResize from "../hooks/useWindowDimensions";
+
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/ext-language_tools";
-import useWindowResize from "../hooks/useWindowDimensions";
+import { getConvertedString } from "../utils/Converter";
 
 function Markdown() {
   const [htmlPreview, setHtmlPreview] = useState(null);
   const [editorheight, setEditorheight] = useState(0);
   const [showFullScreen, setShowFullScreen] = useState(true);
+
   const [showPreview, setShowPreview] = useState(false);
   const [isMobileSize, setIsMobileSize] = useState(false);
 
   const [converted, setConverted] = useState(null);
+
   const { height, width } = useWindowResize();
-
-  const rules = [
-    //header rules
-    [/#{6}\s?([^\n]+)/g, "<h6>$1</h6>"],
-    [/#{5}\s?([^\n]+)/g, "<h5>$1</h5>"],
-    [/#{4}\s?([^\n]+)/g, "<h4>$1</h4>"],
-    [/#{3}\s?([^\n]+)/g, "<h3>$1</h3>"],
-    [/#{2}\s?([^\n]+)/g, "<h2>$1</h2>"],
-    [/#{1}\s?([^\n]+)/g, "<h1>$1</h1>"],
-
-    //bold, italics
-    [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
-    [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
-    [/__([^_]+)__/g, "<b> $1 </b>"],
-    [/_([^_`]+)_/g, "<i> $1 </i>"],
-
-    // blockquotes
-    [/>\s([^\n]+)/g, `<blockquote class="black-quote" > $1 </blockquote>`],
-  ];
 
   useEffect(() => {
     setEditorheight(height - 200);
@@ -49,17 +34,18 @@ function Markdown() {
     }
   }, [height, width]);
 
-  const onChangeEditor = (value) => {
+  const onChangeEditor = (value, detail) => {
     setHtmlPreview(value);
+
     if (value) {
-      let html = value;
+      let html = "";
+      let lineSplit = value.split("\n");
 
-      rules.forEach(
-        ([rule, template]) => (html = html.replace(rule, template))
-      );
-
-      html = html.replace();
-      setConverted(html);
+      lineSplit.forEach((line, index) => {
+        const prev = index === 0 ? "" : lineSplit[index - 1];
+        html = `${html}${getConvertedString(line, prev)}`;
+        setConverted(html);
+      });
     }
   };
 
