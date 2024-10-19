@@ -18,12 +18,11 @@ import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/ext-language_tools";
 
-function Markdown() {
+function Markdown({ handleEditorViewMobile }) {
   const [htmlPreview, setHtmlPreview] = useState(null);
   const [editorheight, setEditorheight] = useState(0);
   const [showFullScreen, setShowFullScreen] = useState(false);
 
-  const [showPreview, setShowPreview] = useState(false);
   const [isMobileSize, setIsMobileSize] = useState(false);
 
   const [showMarkdownContent, setShowMarkdownContent] = useState(true);
@@ -62,23 +61,29 @@ function Markdown() {
         <div
           className="col-md-6 col-sm-12 "
           style={{
-            display: isMobileSize ? (!showPreview ? "block" : "none") : "block",
+            display: isMobileSize
+              ? !handleEditorViewMobile
+                ? "block"
+                : "none"
+              : "block",
           }}
         >
           <div className={`${showFullScreen ? " fullScreen " : "  "}`}>
             <EditorHeader title={"Markdown"}>
-              <div
-                className=" link-secondary cursor-pointer"
-                onClick={() => {
-                  setShowFullScreen(!showFullScreen);
-                }}
-              >
-                {!showFullScreen ? (
-                  <AiOutlineFullscreen size={SVG_ICON_SIZE} />
-                ) : (
-                  <AiOutlineFullscreenExit size={SVG_ICON_SIZE} />
-                )}
-              </div>
+              {!isMobileSize && (
+                <div
+                  className=" link-secondary cursor-pointer"
+                  onClick={() => {
+                    setShowFullScreen(!showFullScreen);
+                  }}
+                >
+                  {!showFullScreen ? (
+                    <AiOutlineFullscreen size={SVG_ICON_SIZE} />
+                  ) : (
+                    <AiOutlineFullscreenExit size={SVG_ICON_SIZE} />
+                  )}
+                </div>
+              )}
             </EditorHeader>
             <div
               className="editor-container"
@@ -105,7 +110,11 @@ function Markdown() {
         <div
           className="col-md-6  col-sm-12  preview-main-container"
           style={{
-            display: isMobileSize ? (showPreview ? "block" : "none") : "block",
+            display: isMobileSize
+              ? handleEditorViewMobile
+                ? "block"
+                : "none"
+              : "block",
           }}
         >
           <EditorHeader title={"Preview"}>
@@ -115,7 +124,7 @@ function Markdown() {
                 setShowMarkdownContent(!showMarkdownContent);
               }}
             >
-              {showMarkdownContent ? (
+              {!isMobileSize && showMarkdownContent ? (
                 <BsFiletypeHtml
                   size={SVG_ICON_SIZE}
                   style={{

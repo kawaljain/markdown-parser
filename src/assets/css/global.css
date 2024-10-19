@@ -134,6 +134,11 @@ body {
     display: block;
   }
 }
+.selected {
+  background: #854ce670;
+  padding: 5px;
+  border-radius: 50%;
+}
 
 /* Navbar section end */
 

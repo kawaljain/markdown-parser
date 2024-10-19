@@ -4,7 +4,7 @@ import { TbEyeCheck } from "react-icons/tb";
 import { MyDetails, SVG_ICON_SIZE } from "../data/constant";
 import IconWrapper from "./IconWrapper";
 
-const Header = () => {
+const Header = ({ handleEditorViewMobile, setHandleEditorViewMobile }) => {
   return (
     <div className="nav-main-container">
       <div className="container">
@@ -12,8 +12,15 @@ const Header = () => {
           <div className="nav-logo-container">
             <h1 className="text-color-primary">Markdown Parser</h1>
           </div>
-          <div className="mobile-icon-container">
-            <TbEyeCheck size={SVG_ICON_SIZE} />
+          <div
+            className={`mobile-icon-container ${
+              handleEditorViewMobile ? "selected" : " "
+            }`}
+            onClick={() => {
+              setHandleEditorViewMobile(!handleEditorViewMobile);
+            }}
+          >
+            <TbEyeCheck size={SVG_ICON_SIZE} className="active" />
           </div>
 
           <div className="header-icon-container">
