@@ -16,6 +16,11 @@ const regexRules = [
 const isLetter = (str) => {
   return /[a-zA-Z]/i.test(str);
 };
+
+const isNumber = (str) => {
+  return /[0-9]/i.test(str);
+};
+
 const convertForSingleWord = (
   html,
   currentFirstChar,
@@ -59,6 +64,13 @@ const getHtmlForUnOrderList = (str, listOnly = false) => {
   return `<ul><li> ${str}</li>`;
 };
 
+const getHtmlForOrderList = (str, listOnly = false) => {
+  if (listOnly) {
+    return `<li > ${str}</li>`;
+  }
+  return `<ol><li> ${str}`;
+};
+
 const getFistCharacter = (line = "") => {
   const splitLine = [...line];
   return splitLine[0];
@@ -67,6 +79,7 @@ const getFistCharacter = (line = "") => {
 const addClosingTag = (currentFirstChar, lastFirstChar) => {
   if (lastFirstChar === "-" && currentFirstChar !== "-") return "</ul>";
   else if (lastFirstChar === "`") return "</code>";
+  else if (!isNumber(lastFirstChar)) return "</ol>";
   return "";
 };
 
@@ -145,10 +158,15 @@ export const getConvertedString = (line = "", prevLine = "") => {
   const previousListFirsChar = getFistCharacter(prevLine);
   let currentFirstChar = getFistCharacter(line);
   let html = addClosingTag(currentFirstChar, previousListFirsChar);
+  const isNo = isNumber(currentFirstChar);
+  const wordsInArray = line.split(" ");
+
   if (isLetter(currentFirstChar)) {
     html = `${html}<p>${line}</p>`;
+  } else if (isNo) {
+    const restData = wordsInArray.slice(1).join(" ");
+    html += getHtmlForOrderList(restData, isNumber(previousListFirsChar));
   } else {
-    const wordsInArray = line.split(" ");
     if (startingFirstCharCheck.includes(currentFirstChar)) {
       html = convertForMultipleWord(
         html,
