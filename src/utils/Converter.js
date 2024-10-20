@@ -1,4 +1,5 @@
 const startingHorizontalBreak = ["*", "-", "_"];
+const startingFirstCharCheck = ["#", ">", "-"];
 const regexRules = [
   //bold, italics and paragragh rules
   [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
@@ -71,23 +72,55 @@ const convertForMultipleWord = (
   words = [],
   prevLine
 ) => {
-  if (!words[1]) {
+  const restData = words.slice(1).join(" ");
+
+  if (!restData) {
     return `${html}<p>${words.join(" ")}</p>`;
   }
+
   switch (firstLetter) {
     case "#":
-      html += getHtmlForHeading(words[0].length, words[1]);
+      html += getHtmlForHeading(words[0].length, restData);
       break;
     case ">":
-      html += getHtmlForBlockQuote(words[1]);
+      html += getHtmlForBlockQuote(restData);
       break;
     case "-":
-      html += getHtmlForUnOrderList(words[1], previousListFirsChar === "-");
+      html += getHtmlForUnOrderList(restData, previousListFirsChar === "-");
       break;
 
     default:
-      return `${html}<p>${words[1]}</p>`;
+      return `${html}<p>${restData}</p>`;
   }
+  return html;
+};
+
+const getHtmlForImages = (str = "") => {
+  let index = str.indexOf("![");
+  if (index === -1) {
+    return str;
+  }
+
+  let html = null;
+  let alt,
+    src,
+    title = "";
+
+  if (str.match(/\[(.*?)\]/)) {
+    alt = str.match(/\[(.*?)\]/)[1] ?? "";
+  }
+
+  let details = str.match(/\((.*?)\)/);
+  if (details) {
+    let image = details[1].split('"');
+    src = image[0] ? image[0] : " ";
+    title = image[1] ? image[1] : " ";
+  }
+  const lastIndex = str.lastIndexOf(")");
+  const beforeLink = str.slice(0, index);
+  const afterIndex = str.slice(lastIndex + 1);
+
+  html = `${beforeLink}<img src="${src.trim()}" alt="${alt}" title="${title}" className="" />${afterIndex}`;
   return html;
 };
 
@@ -100,16 +133,7 @@ export const getConvertedString = (line = "", prevLine = "") => {
     html = `${html}<p>${line}</p>`;
   } else {
     const wordsInArray = line.split(" ");
-
-    if (wordsInArray.length < 2) {
-      html = convertForSingleWord(
-        html,
-        currentFirstChar,
-        previousListFirsChar,
-        wordsInArray[0],
-        prevLine
-      );
-    } else {
+    if (startingFirstCharCheck.includes(currentFirstChar)) {
       html = convertForMultipleWord(
         html,
         currentFirstChar,
@@ -117,11 +141,25 @@ export const getConvertedString = (line = "", prevLine = "") => {
         wordsInArray,
         prevLine
       );
+    } else {
+      html = `${html}<p>${line}</p>`;
+      html = convertForSingleWord(
+        html,
+        currentFirstChar,
+        previousListFirsChar,
+        wordsInArray[0],
+        prevLine
+      );
     }
+  }
+  // scan for images
+  if (html.indexOf("![") > 0) {
+    html = getHtmlForImages(html);
   }
 
   regexRules.forEach(([rule, template]) => {
     html = html.replace(rule, template);
   });
+
   return html;
 };
