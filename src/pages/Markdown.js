@@ -72,7 +72,7 @@ function Markdown({ handleEditorViewMobile }) {
         >
           <div className={`${showFullScreen ? " fullScreen " : "  "}`}>
             <EditorHeader title={"Markdown"}>
-              {!isMobileSize && (
+              {!isMobileSize && false && (
                 <div
                   className=" link-secondary cursor-pointer"
                   onClick={() => {
