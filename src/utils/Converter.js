@@ -86,7 +86,7 @@ const convertForMultipleWord = (
   switch (firstLetter) {
     case "#":
       let checkAllChar = true;
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < words[0].length; i++) {
         if (words[0][i] !== "#") {
           checkAllChar = false;
           break;
