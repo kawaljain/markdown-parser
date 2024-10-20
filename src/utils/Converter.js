@@ -28,11 +28,16 @@ const convertForSingleWord = (
 
   // for horizontal line
   if (startingHorizontalBreak.includes(currentFirstChar)) {
-    let astrick = "";
+    let astrick = "",
+      dashes = "",
+      hyphens = "";
     for (let i = 0; i < strLength; i++) {
       astrick = `${astrick}*`;
+      dashes = `${dashes}_`;
+      hyphens = `${hyphens}-`;
     }
-    if (str === astrick && strLength > 2) return `${html}<hr />`;
+    if ((str === astrick || str === dashes || str === hyphens) && strLength > 2)
+      return `${html}<hr />`;
   }
   return `${html}<p>${str}</p>`;
 };
@@ -80,7 +85,19 @@ const convertForMultipleWord = (
 
   switch (firstLetter) {
     case "#":
-      html += getHtmlForHeading(words[0].length, restData);
+      let checkAllChar = true;
+      for (let i = 0; i < 6; i++) {
+        if (words[0][i] !== "#") {
+          checkAllChar = false;
+          break;
+        }
+      }
+      if (!checkAllChar) {
+        html += `<p>${words.join(" ")}</p>`;
+      } else {
+        html += getHtmlForHeading(words[0].length, restData);
+      }
+
       break;
     case ">":
       html += getHtmlForBlockQuote(restData);
@@ -120,7 +137,7 @@ const getHtmlForImages = (str = "") => {
   const beforeLink = str.slice(0, index);
   const afterIndex = str.slice(lastIndex + 1);
 
-  html = `${beforeLink}<img src="${src.trim()}" alt="${alt}" title="${title}" className="" />${afterIndex}`;
+  html = `${beforeLink}<img src="${src}" alt="${alt}" title="${title}" className="" />${afterIndex}`;
   return html;
 };
 
@@ -128,7 +145,6 @@ export const getConvertedString = (line = "", prevLine = "") => {
   const previousListFirsChar = getFistCharacter(prevLine);
   let currentFirstChar = getFistCharacter(line);
   let html = addClosingTag(currentFirstChar, previousListFirsChar);
-
   if (isLetter(currentFirstChar)) {
     html = `${html}<p>${line}</p>`;
   } else {
@@ -142,9 +158,8 @@ export const getConvertedString = (line = "", prevLine = "") => {
         prevLine
       );
     } else {
-      html = `${html}<p>${line}</p>`;
       html = convertForSingleWord(
-        html,
+        `${html}`,
         currentFirstChar,
         previousListFirsChar,
         wordsInArray[0],
@@ -152,11 +167,9 @@ export const getConvertedString = (line = "", prevLine = "") => {
       );
     }
   }
-  // scan for images
-  if (html.indexOf("![") > 0) {
-    html = getHtmlForImages(html);
+  if (line.indexOf("![") > -1) {
+    html = getHtmlForImages(`${html}<p>${line}</p>`);
   }
-
   regexRules.forEach(([rule, template]) => {
     html = html.replace(rule, template);
   });
