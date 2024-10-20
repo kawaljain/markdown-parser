@@ -129,7 +129,7 @@ If you have ideas or suggestions for features you’d like to see in future rele
 Have questions? Feel free to reach out:
 
 - Email - kawaljain03@gmail.com
-- Portfolio - kawaljain.com
+- Portfolio - [kawaljain.com](https://kawaljain.com/)
 
 ---
 
